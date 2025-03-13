@@ -1,0 +1,70 @@
+.referral-dashboard {
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.referral-dashboard h2 {
+  color: var(--primary-color);
+}
+
+.referral-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--secondary-color);
+  padding: 10px;
+  border-radius: 5px;
+  margin: 15px 0;
+}
+
+.referral-link input {
+  border: none;
+  background: transparent;
+  width: 80%;
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.referral-link button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.referral-stats {
+  background: var(--secondary-color);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.leaderboard {
+  background: var(--secondary-color);
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.leaderboard ul {
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboard li {
+  padding: 5px;
+  border-bottom: 1px solid var(--primary-color);
+}
+
+footer {
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
