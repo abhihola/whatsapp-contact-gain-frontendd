@@ -1,0 +1,39 @@
+.premium-vcf {
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: 20px;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.premium-vcf h2 {
+  color: var(--primary-color);
+}
+
+.not-premium {
+  color: red;
+  font-weight: bold;
+}
+
+button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+footer {
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
