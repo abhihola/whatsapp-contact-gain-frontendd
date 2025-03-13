@@ -1,71 +1,31 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
-// Create authentication context
-export const AuthContext = createContext();
+export const AuthContext = createContext(); // ✅ Named Export
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [loading, setLoading] = useState(true);
 
-  // 🔑 Check if user is logged in
   useEffect(() => {
-    if (token) {
-      fetchUserProfile();
-    }
-  }, [token]);
-
-  // 📌 Fetch user profile from backend
-  const fetchUserProfile = async () => {
-    try {
-      const response = await fetch("https://your-backend.com/api/user/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setUser(data.user);
-      } else {
-        logout(); // If token is invalid, log out user
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/user`, {
+          withCredentials: true,
+        });
+        setUser(res.data);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      logout();
-    }
-  };
+    };
 
-  // 🔓 Login function
-  const login = async (email, password) => {
-    try {
-      const response = await fetch("https://your-backend.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        setToken(data.token);
-        localStorage.setItem("token", data.token);
-        fetchUserProfile();
-      } else {
-        throw new Error(data.message || "Login failed");
-      }
-    } catch (error) {
-      console.error("Login error:", error.message);
-      throw error;
-    }
-  };
-
-  // 🔒 Logout function
-  const logout = () => {
-    setUser(null);
-    setToken("");
-    localStorage.removeItem("token");
-  };
+    fetchUser();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
