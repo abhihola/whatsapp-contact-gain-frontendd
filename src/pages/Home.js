@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
-import logo from "../../public/logo.png"; // Septorch logo
+import logo from "../assets/logo.png"; // Septorch logo
 
 const Home = () => {
   return (
