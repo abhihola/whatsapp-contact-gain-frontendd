@@ -1,0 +1,54 @@
+/* 🎨 Global Styles */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #ffffff;
+  --dark-bg: #121212;
+  --light-bg: #f8f9fa;
+  --text-dark: #333;
+  --text-light: #ffffff;
+  --transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  transition: var(--transition);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+a:hover {
+  color: darkblue;
+}
+
+/* 🌗 Light & Dark Mode */
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+}
+
+.dark-mode a {
+  color: #66b2ff;
+}
+
+.dark-mode a:hover {
+  color: #3385ff;
+}
+
+/* 🌍 Responsive Design */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}
