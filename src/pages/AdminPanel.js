@@ -1,144 +1,134 @@
-import React, { useState, useEffect } from "react";
-import "./AdminPanel.css";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./AdminPanel.css"; // Make sure this CSS file exists for styling
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
-  const [referralEnabled, setReferralEnabled] = useState(true);
-  const [premiumEnabled, setPremiumEnabled] = useState(true);
-  const [announcement, setAnnouncement] = useState("");
-  const [message, setMessage] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // Fetch users from backend
   const fetchUsers = async () => {
     try {
-      const response = await fetch("https://your-backend-url.com/api/users");
-      const data = await response.json();
-      setUsers(data);
-    } catch (err) {
-      console.error("Error fetching users", err);
+      const response = await axios.get("/api/users");
+      setUsers(response.data);
+      setFilteredUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
     }
   };
 
-  // Toggle Referral System
-  const toggleReferral = async () => {
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(query) || user.email.toLowerCase().includes(query)
+    );
+    setFilteredUsers(filtered);
+  };
+
+  const handleSelectUser = (userId) => {
+    setSelectedUsers((prevSelected) =>
+      prevSelected.includes(userId) ? prevSelected.filter((id) => id !== userId) : [...prevSelected, userId]
+    );
+  };
+
+  const handleDeleteUsers = async () => {
+    if (selectedUsers.length === 0) return alert("No users selected.");
     try {
-      const response = await fetch("https://your-backend-url.com/api/admin/toggle-referral", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled: !referralEnabled }),
-      });
-      if (response.ok) {
-        setReferralEnabled(!referralEnabled);
-      }
-    } catch (err) {
-      console.error("Error toggling referral system", err);
+      await axios.post("/api/users/delete", { userIds: selectedUsers });
+      fetchUsers();
+      setSelectedUsers([]);
+      alert("Users deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting users:", error);
     }
   };
 
-  // Toggle Premium Access
-  const togglePremium = async () => {
-    try {
-      const response = await fetch("https://your-backend-url.com/api/admin/toggle-premium", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled: !premiumEnabled }),
-      });
-      if (response.ok) {
-        setPremiumEnabled(!premiumEnabled);
-      }
-    } catch (err) {
-      console.error("Error toggling premium access", err);
-    }
+  const handleViewUser = (user) => {
+    setUserDetails(user);
   };
 
-  // Send Announcement to Users
-  const sendAnnouncement = async () => {
-    try {
-      const response = await fetch("https://your-backend-url.com/api/admin/send-announcement", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: announcement }),
-      });
-      if (response.ok) {
-        setMessage("Announcement sent successfully!");
-        setAnnouncement("");
-      }
-    } catch (err) {
-      console.error("Error sending announcement", err);
-    }
+  const closeUserDetails = () => {
+    setUserDetails(null);
   };
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const displayedUsers = filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage);
 
   return (
     <div className="admin-panel">
       <h2>Admin Panel</h2>
 
-      {/* Toggle Referral System */}
-      <div className="toggle">
-        <h3>Referral System</h3>
-        <button onClick={toggleReferral}>
-          {referralEnabled ? "Disable" : "Enable"}
-        </button>
-      </div>
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={searchQuery}
+        onChange={handleSearch}
+        className="search-bar"
+      />
 
-      {/* Toggle Premium Access */}
-      <div className="toggle">
-        <h3>Premium Access</h3>
-        <button onClick={togglePremium}>
-          {premiumEnabled ? "Disable" : "Enable"}
-        </button>
-      </div>
+      <button onClick={handleDeleteUsers} className="delete-button">Delete Selected</button>
 
-      {/* User Management */}
-      <div className="users">
-        <h3>Manage Users</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Referrals</th>
-              <th>Actions</th>
+      <table className="user-table">
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayedUsers.map((user) => (
+            <tr key={user._id}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedUsers.includes(user._id)}
+                  onChange={() => handleSelectUser(user._id)}
+                />
+              </td>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                <button onClick={() => handleViewUser(user)}>View</button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.referrals}</td>
-                <td>
-                  <button className="remove">Remove</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pagination */}
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button key={index} onClick={() => setCurrentPage(index + 1)} className={currentPage === index + 1 ? "active" : ""}>
+            {index + 1}
+          </button>
+        ))}
       </div>
 
-      {/* Announcements */}
-      <div className="announcement">
-        <h3>Send Announcement</h3>
-        <textarea
-          value={announcement}
-          onChange={(e) => setAnnouncement(e.target.value)}
-          placeholder="Write your message here..."
-        ></textarea>
-        <button onClick={sendAnnouncement}>Send</button>
-        {message && <p className="success">{message}</p>}
-      </div>
-
-      {/* Footer */}
-      <footer className="footer">
-        <p>Powered by <strong>Septorch</strong></p>
-        <div className="social-links">
-          <a href="https://www.tiktok.com/@septorch" target="_blank" rel="noopener noreferrer">TikTok</a>
-          <a href="https://www.instagram.com/septorch29/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      {/* User Details Modal */}
+      {userDetails && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>User Details</h3>
+            <p><strong>Name:</strong> {userDetails.name}</p>
+            <p><strong>Email:</strong> {userDetails.email}</p>
+            <p><strong>Role:</strong> {userDetails.role}</p>
+            <button onClick={closeUserDetails}>Close</button>
+          </div>
         </div>
-      </footer>
+      )}
     </div>
   );
 };
