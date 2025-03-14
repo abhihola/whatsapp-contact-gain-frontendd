@@ -37,6 +37,11 @@ const Login = () => {
     }
   };
 
+  // Social Login Handler
+  const handleSocialLogin = (provider) => {
+    window.location.href = `https://your-backend-url.com/auth/${provider}`;
+  };
+
   return (
     <div className="login-container">
       <h2>Login to Your Account</h2>
@@ -62,6 +67,21 @@ const Login = () => {
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
+
+      {/* Forgot Password */}
+      <p>
+        <Link to="/forgot-password" className="forgot-password">Forgot Password?</Link>
+      </p>
+
+      {/* Social Login Buttons */}
+      <div className="social-login">
+        <button onClick={() => handleSocialLogin("google")} className="google-btn">
+          Login with Google
+        </button>
+        <button onClick={() => handleSocialLogin("facebook")} className="facebook-btn">
+          Login with Facebook
+        </button>
+      </div>
 
       <p>
         Don't have an account? <Link to="/register">Sign up here</Link>
