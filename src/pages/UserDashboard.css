@@ -1,67 +1,47 @@
 .dashboard-container {
   max-width: 600px;
-  margin: 40px auto;
+  margin: 50px auto;
   padding: 20px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-}
-
-h2 {
-  color: #007bff;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .referral-link {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
+  gap: 10px;
 }
 
 .referral-link input {
   width: 80%;
-  padding: 8px;
-  border: 1px solid #ddd;
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  text-align: center;
-  font-size: 14px;
 }
 
-.referral-link button {
-  padding: 8px 12px;
-  margin-left: 5px;
+button {
+  padding: 10px;
   background: #007bff;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.referral-link button:hover {
+button:hover {
   background: #0056b3;
 }
 
 .stats {
-  margin: 20px 0;
-  font-size: 16px;
+  margin-top: 20px;
+  font-size: 18px;
 }
 
 .vcf-section {
   margin-top: 20px;
-}
-
-.vcf-section button {
-  background: #28a745;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.vcf-section button:hover {
-  background: #218838;
 }
 
 .nav-links {
@@ -69,15 +49,11 @@ h2 {
 }
 
 .nav-links a {
-  display: inline-block;
-  margin: 10px;
-  color: #007bff;
+  display: block;
+  margin: 10px 0;
   text-decoration: none;
+  color: #007bff;
   font-weight: bold;
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
 }
 
 .dashboard-footer {
@@ -88,9 +64,8 @@ h2 {
 
 .social-links a {
   margin: 0 10px;
-  text-decoration: none;
   color: #007bff;
-  font-weight: bold;
+  text-decoration: none;
 }
 
 .social-links a:hover {
