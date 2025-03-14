@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./PremiumVCF.css";
-import { AuthContext } from "../context/AuthContext";";
+import { AuthContext } from "../context/AuthContext";
 
 const PremiumVCF = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +11,9 @@ const PremiumVCF = () => {
   useEffect(() => {
     const fetchPremiumStatus = async () => {
       try {
-        const response = await fetch(`/api/premium/${user?.id}`);
+        if (!user?.id) return;
+        const response = await fetch(`/api/premium/${user.id}`);
+        if (!response.ok) throw new Error("Failed to fetch premium status");
         const data = await response.json();
         setIsPremium(data.isPremium);
       } catch (error) {
@@ -19,8 +21,8 @@ const PremiumVCF = () => {
       }
     };
 
-    if (user) fetchPremiumStatus();
-  }, [user]);
+    fetchPremiumStatus();
+  }, [user?.id]);
 
   // Generate VCF content
   const generateVCF = () => {
@@ -36,6 +38,7 @@ END:VCARD`;
 
   // Download VCF file
   const downloadVCF = () => {
+    if (!vcfContent) return;
     const blob = new Blob([vcfContent], { type: "text/vcard" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -55,7 +58,7 @@ END:VCARD`;
         </p>
       ) : (
         <>
-          <p>✅ You have **Premium Access!** 🎉</p>
+          <p>✅ You have <strong>Premium Access!</strong> 🎉</p>
           <button onClick={generateVCF}>Generate VCF</button>
           {vcfContent && <button onClick={downloadVCF}>Download VCF</button>}
         </>
