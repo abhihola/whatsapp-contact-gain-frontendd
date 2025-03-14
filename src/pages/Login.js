@@ -1,18 +1,20 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
 import { AuthContext } from "../context/AuthContext";
+import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("https://your-backend-url.com/api/login", {
@@ -30,13 +32,17 @@ const Login = () => {
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <h2>Login to Your Account</h2>
+      
       {error && <p className="error">{error}</p>}
+
       <form onSubmit={handleLogin}>
         <input
           type="email"
@@ -52,8 +58,11 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
+
       <p>
         Don't have an account? <Link to="/register">Sign up here</Link>
       </p>
