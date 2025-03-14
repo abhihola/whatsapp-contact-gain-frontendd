@@ -1,65 +1,64 @@
-:root {
-  --primary-color: #007bff;
-  --secondary-color: #0056b3;
-  --bg-color: #f4f4f4;
-  --text-color: #333;
-}
-
+/* Login Container */
 .login-container {
   text-align: center;
-  background: var(--bg-color);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-h2 {
-  color: var(--primary-color);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  background: white;
+  max-width: 400px;
+  margin: 50px auto;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
 }
 
+/* Input Fields */
 input {
-  margin-bottom: 10px;
+  width: 100%;
   padding: 10px;
-  border: 1px solid var(--primary-color);
+  margin: 10px 0;
+  border: 1px solid #ccc;
   border-radius: 5px;
 }
 
+/* Button */
 button {
-  background: var(--primary-color);
-  color: white;
+  width: 100%;
   padding: 10px;
   border: none;
   border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
-button:hover {
-  background: var(--secondary-color);
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Error Message */
 .error {
   color: red;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
+/* Footer */
 .footer {
-  padding: 20px;
   margin-top: 20px;
+  font-size: 14px;
 }
 
 .social-links a {
   margin: 0 10px;
-  text-decoration: none;
-  color: var(--primary-color);
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #0056b3;
 }
