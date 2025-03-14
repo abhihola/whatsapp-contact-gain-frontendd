@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./PremiumVCF.css";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";";
 
 const PremiumVCF = () => {
   const { user } = useContext(AuthContext);
