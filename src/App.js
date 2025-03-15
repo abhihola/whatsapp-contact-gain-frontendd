@@ -9,10 +9,10 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminPanel from "./pages/AdminPanel";
 import ReferralDashboard from "./components/ReferralDashboard";
 import PremiumVCF from "./components/PremiumVCF";
-import ForgotPassword from "./pages/ForgotPassword"; // Added Forgot Password Page
-import ResetPassword from "./pages/ResetPassword"; // Added Reset Password Page
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./context/AuthContext"; // Added AuthProvider
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
@@ -28,8 +28,8 @@ function App() {
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/referrals" element={<ReferralDashboard />} />
             <Route path="/premium-vcf" element={<PremiumVCF />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Added Forgot Password */}
-            <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Added Reset Password */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="*" element={<NotFound />} /> {/* Handles 404 */}
           </Routes>
           <Footer />
