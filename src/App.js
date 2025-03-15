@@ -9,26 +9,33 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminPanel from "./pages/AdminPanel";
 import ReferralDashboard from "./components/ReferralDashboard";
 import PremiumVCF from "./components/PremiumVCF";
+import ForgotPassword from "./pages/ForgotPassword"; // Added Forgot Password Page
+import ResetPassword from "./pages/ResetPassword"; // Added Reset Password Page
 import NotFound from "./pages/NotFound";
+import { AuthProvider } from "./context/AuthContext"; // Added AuthProvider
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/referrals" element={<ReferralDashboard />} />
-          <Route path="/premium-vcf" element={<PremiumVCF />} />
-          <Route path="*" element={<NotFound />} /> {/* Handles 404 */}
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider> {/* Wrap everything with AuthProvider */}
+      <Router>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/referrals" element={<ReferralDashboard />} />
+            <Route path="/premium-vcf" element={<PremiumVCF />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Added Forgot Password */}
+            <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Added Reset Password */}
+            <Route path="*" element={<NotFound />} /> {/* Handles 404 */}
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
