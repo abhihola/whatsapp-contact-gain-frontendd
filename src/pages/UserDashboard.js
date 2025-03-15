@@ -1,57 +1,89 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import "./UserDashboard.css"; // Ensure this file exists
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import "./UserDashboard.css";
 
 const UserDashboard = () => {
-  const [user, setUser] = useState(null);
-  const [referrals, setReferrals] = useState([]);
+  const { user } = useContext(AuthContext);
+  const [referrals, setReferrals] = useState(0);
+  const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const referralLink = `${window.location.origin}/register?ref=${user?.id}`;
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    if (!user?.id) return;
+
+    const fetchReferrals = async () => {
+      setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("No authentication token found.");
-          return;
-        }
-
-        const response = await axios.get("https://your-backend-url.com/api/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setUser(response.data.user);
-        setReferrals(response.data.referrals);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+        const res = await fetch(`/api/referrals/${user.id}`);
+        if (!res.ok) throw new Error("Failed to fetch referrals");
+        
+        const data = await res.json();
+        setReferrals(data.referralCount || 0);
+        setIsPremium(data.isPremium || false);
+      } catch (err) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
-  }, []);
+    fetchReferrals();
+  }, [user?.id]);
 
-  if (loading) return <div className="dashboard-loading">Loading...</div>;
+  // Copy referral link
+  const handleCopy = () => {
+    navigator.clipboard.writeText(referralLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="dashboard-container">
-      <h1>Welcome, {user?.name}!</h1>
-      <p>Your referral link: <strong>{user?.referralLink}</strong></p>
+    <div className="dashboard">
+      <h2>Welcome, {user?.name}! </h2>
 
-      <h2>Your Referrals</h2>
-      {referrals.length > 0 ? (
-        <ul>
-          {referrals.map((referral, index) => (
-            <li key={index}>{referral.name} - {referral.email}</li>
-          ))}
-        </ul>
+      {loading ? (
+        <p>Loading dashboard...</p>
+      ) : error ? (
+        <p className="error-message"> {error}</p>
       ) : (
-        <p>No referrals yet. Share your link to invite others!</p>
+        <>
+          <div className="dashboard-section">
+            <h3>Your Referral Link</h3>
+            <input type="text" value={referralLink} readOnly aria-label="Referral link" />
+            <button onClick={handleCopy} aria-label="Copy referral link">
+              {copied ? " Copied!" : " Copy Link"}
+            </button>
+          </div>
+
+          <div className="dashboard-section">
+            <h3>Referrals</h3>
+            <p> You have referred <strong>{referrals}</strong> people.</p>
+            {referrals >= 10 ? (
+              <p className="premium-status"> Congrats! You have premium access!</p>
+            ) : (
+              <p className="non-premium">
+                Invite <strong>{10 - referrals}</strong> more to unlock premium.
+              </p>
+            )}
+          </div>
+
+          {isPremium && (
+            <div className="dashboard-section">
+              <h3>Premium VCF Access</h3>
+              <p> You can generate and download your own VCF file.</p>
+              <a href="/premium-vcf" className="vcf-btn">Generate VCF</a>
+            </div>
+          )}
+        </>
       )}
 
-      <Link to="/premium-vcf" className="dashboard-button">Download Premium VCF</Link>
+      <footer>
+        <p>Powered by <strong>Septorch</strong></p>
+      </footer>
     </div>
   );
 };
