@@ -10,7 +10,7 @@
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
     "serve": "^14.2.0",
-    "react-icons": "^4.10.1"  // Added react-icons
+    "react-icons": "^4.10.1"
   },
   "scripts": {
     "start": "react-scripts start",
