@@ -1,47 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./ForgotPassword.css";
+import "./ForgotPassword.css"; // Ensure this file exists
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
-    setLoading(true);
 
     try {
-      const response = await fetch("https://your-backend-url.com/api/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/forgot-password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
-        setMessage("A password reset link has been sent to your email.");
+        setMessage("Password reset link sent! Check your email.");
       } else {
-        setError(data.message || "Something went wrong.");
+        setError(data.message || "Failed to send reset link. Try again.");
       }
     } catch (err) {
-      setError("Failed to send email. Try again later.");
-    } finally {
-      setLoading(false);
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
     <div className="forgot-password-container">
-      <h2>Forgot Password</h2>
-      <p>Enter your email to receive a password reset link.</p>
-
+      <h2>Forgot Password?</h2>
+      <p>Enter your email and we'll send you a reset link.</p>
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
-
       <form onSubmit={handleForgotPassword}>
         <input
           type="email"
@@ -50,14 +46,8 @@ const ForgotPassword = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Send Reset Link"}
-        </button>
+        <button type="submit">Send Reset Link</button>
       </form>
-
-      <p>
-        Remembered your password? <Link to="/login">Login here</Link>
-      </p>
     </div>
   );
 };
