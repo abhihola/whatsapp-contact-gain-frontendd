@@ -9,7 +9,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
-    "serve": "^14.2.0"
+    "serve": "^14.2.0",
+    "react-icons": "^4.10.1"  // Added react-icons
   },
   "scripts": {
     "start": "react-scripts start",
@@ -17,7 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "npm run build && serve -s build"
+    "deploy": "serve -s build"
   },
   "eslintConfig": {
     "extends": ["react-app", "react-app/jest"]
