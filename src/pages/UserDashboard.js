@@ -1,73 +1,59 @@
-.dashboard-container {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
-  text-align: center;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import "./UserDashboard.css"; // Ensure this file exists
 
-.referral-link {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
+const UserDashboard = () => {
+  const [user, setUser] = useState(null);
+  const [referrals, setReferrals] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-.referral-link input {
-  width: 80%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No authentication token found.");
+          return;
+        }
 
-button {
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+        const response = await axios.get("https://your-backend-url.com/api/user", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-button:hover {
-  background: #0056b3;
-}
+        setUser(response.data.user);
+        setReferrals(response.data.referrals);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-.stats {
-  margin-top: 20px;
-  font-size: 18px;
-}
+    fetchUserData();
+  }, []);
 
-.vcf-section {
-  margin-top: 20px;
-}
+  if (loading) return <div className="dashboard-loading">Loading...</div>;
 
-.nav-links {
-  margin-top: 20px;
-}
+  return (
+    <div className="dashboard-container">
+      <h1>Welcome, {user?.name}!</h1>
+      <p>Your referral link: <strong>{user?.referralLink}</strong></p>
 
-.nav-links a {
-  display: block;
-  margin: 10px 0;
-  text-decoration: none;
-  color: #007bff;
-  font-weight: bold;
-}
+      <h2>Your Referrals</h2>
+      {referrals.length > 0 ? (
+        <ul>
+          {referrals.map((referral, index) => (
+            <li key={index}>{referral.name} - {referral.email}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No referrals yet. Share your link to invite others!</p>
+      )}
 
-.dashboard-footer {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #555;
-}
+      <Link to="/premium-vcf" className="dashboard-button">Download Premium VCF</Link>
+    </div>
+  );
+};
 
-.social-links a {
-  margin: 0 10px;
-  color: #007bff;
-  text-decoration: none;
-}
-
-.social-links a:hover {
-  text-decoration: underline;
-}
+export default UserDashboard;
