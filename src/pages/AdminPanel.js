@@ -17,7 +17,7 @@ const AdminPanel = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("/api/users");
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users"`);
       setUsers(response.data);
       setFilteredUsers(response.data);
     } catch (error) {
@@ -43,7 +43,7 @@ const AdminPanel = () => {
   const handleDeleteUsers = async () => {
     if (selectedUsers.length === 0) return alert("No users selected.");
     try {
-      await axios.post("/api/users/delete", { userIds: selectedUsers });
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/users/delete", { userIds: selectedUsers }`);
       fetchUsers();
       setSelectedUsers([]);
       alert("Users deleted successfully.");
